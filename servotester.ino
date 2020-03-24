@@ -15,6 +15,8 @@ void setup() {
   Serial.begin(9600);
   Serial.println("16 channel Servo test!");
   M5.begin(true, false, true);
+  Wire.begin();
+  if(digitalRead(39)==0){updateFromFS(SD);ESP.restart();} 
   M5.Power.begin();
   pwm.begin();
   M5.Lcd.clear(BLACK);
@@ -27,30 +29,23 @@ void setup() {
   M5.Lcd.println("A and C to + and -");
   M5.Lcd.setTextColor(RED,BLACK);
   pwm.setPWMFreq(50);
-  Wire.begin();if(digitalRead(39)==0){updateFromFS(SD);ESP.restart();} 
-  
-  //yield();
+   //yield();
 }
 
 
 void loop() {
-while (servonum<16)
-     {
-  M5.update();
-  if (M5.BtnA.wasReleased()) {
-    M5.Lcd.print(pulselen); pulselen+=10;
-  } else if (M5.BtnB.wasReleased()) {
-    M5.Lcd.print(servonum); servonum++;
-  } else if (M5.BtnC.wasReleased()) {
-    M5.Lcd.print(pulselen); pulselen-=10;
-  } ;
-  M5.Lcd.setCursor(0, 0);
-  
-    
-  // update the servos
-  pwm.setPWM(servonum, 0, SERVOMIN + pulselen);
-  
-  
+  while (servonum<16) {
+    M5.update();
+    if (M5.BtnA.wasPressed()) {
+      M5.Lcd.print(pulselen); pulselen+=10;
+    } else if (M5.BtnB.wasPressed()) {
+      M5.Lcd.print(servonum); servonum++;
+    } else if (M5.BtnC.wasPressed()) {
+      M5.Lcd.print(pulselen); pulselen-=10;
+    } ;
+    M5.Lcd.setCursor(0, 0);
+    // update the servos
+    pwm.setPWM(servonum, 0, SERVOMIN + pulselen);
   }
-  servonum == 0;
+  servonum = 0;
 }
