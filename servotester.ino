@@ -52,5 +52,5 @@ while (servonum<16)
   
   
   }
-  servonum == 0;
+  servonum = 0;
 }
